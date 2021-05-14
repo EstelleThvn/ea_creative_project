@@ -32,7 +32,7 @@ let yRightEyeUserImg;
 let widthRightEyeUserImg;
 let heightRightEyeUserImg;
 
-
+let userImgResized;
 
 
 function setup() {
@@ -83,16 +83,13 @@ function draw() {
   // We call function to draw all keypoints
   // drawKeypoints();
 
-    /*if (userImg) {
-      image(userImg, width/2, 0, width/2, height);
-    }*/
-
   if (predictionsUserImg.length > 0) {
       // image(userImg, width/2, 0, videoWidth, videoHeight);
-      // userImg.size(videoWidth,videoHeight);
-      image(userImg, width/2, 0);
-      console.log('TEST APR AFFICHAGE')
-      console.log(userImg)
+      // userImgResized.size(videoWidth,videoHeight);
+      image(userImgResized, width/2, 0,videoWidth,videoHeight);
+      // console.log('TEST APR AFFICHAGE')
+      // console.log(userImg)
+
       drawKeypointsUserImg();
       // noLoop(); // stop looping when the poses are estimated // marche pas parce que l'autre doit avoir une loop
       drawKeypoints();
@@ -133,13 +130,15 @@ function drawKeypoints() {
 
     if ( video.loadedmetadata ) { // I've added this check. Only shoot pics if the camera is ready.
 
-      let img = video.get( keypoints[57][0], keypoints[164][1], widthMouth, heightMouth );
-  
-      let mouthMask;
-      mouthMask = createGraphics(widthMouth, heightMouth);
 
-      let xDepart = keypoints[57][0];
-      let yDepart = keypoints[164][1];
+
+      let img = video.get(keypoints[57][0]-10, keypoints[164][1]-10, widthMouth+20, heightMouth+20);
+
+      let mouthMask;
+      mouthMask = createGraphics(widthMouth+20, heightMouth+20);
+
+      let xDepart = keypoints[57][0]-10;
+      let yDepart = keypoints[164][1]-10;
 
       mouthMask.noStroke();
       mouthMask.fill('rgba(0, 0, 0, 1)');
@@ -165,7 +164,7 @@ function drawKeypoints() {
       mouthMask.vertex(keypoints[106][0]-xDepart, keypoints[106][1]-yDepart);
       mouthMask.vertex(keypoints[43][0]-xDepart, keypoints[43][1]-yDepart);
       mouthMask.endShape(CLOSE);
-      // mouthMask.filter(BLUR, 5);
+      mouthMask.filter(BLUR, 5);
 
       img.mask(mouthMask);
 
@@ -290,12 +289,16 @@ function handleFile(file) {
   print(file);
   if (file.type === 'image') {
     userImg = createImg(file.data,imageReady);
+    userImgResized = createImg(file.data, '');
     console.log(userImg)
-    // userImg.size(videoWidth,videoHeight);
+    userImg.size(videoWidth,videoHeight);
     console.log(userImg)
+    
     userImg.hide();
+    userImgResized.hide();
   } else {
     userImg = null;
+    userImgResized = null;
   }
 }
 
