@@ -5,7 +5,7 @@ let predictions = [];
 let videoWidth = 640;
 let videoHeight = 480;
 
-let pics = [];
+let picsMouth = [];
 let idx = 0;
 
 let input;
@@ -16,6 +16,23 @@ let xMouthUserImg;
 let yMouthUserImg;
 let widthMouthUserImg;
 let heightMouthUserImg;
+
+let idxLeftEye = 0;
+let picsLeftEye = [];
+let xLeftEyeUserImg;
+let yLeftEyeUserImg;
+let widthLeftEyeUserImg;
+let heightLeftEyeUserImg;
+
+
+let idxRightEye = 0;
+let picsRightEye = [];
+let xRightEyeUserImg;
+let yRightEyeUserImg;
+let widthRightEyeUserImg;
+let heightRightEyeUserImg;
+
+
 
 
 function setup() {
@@ -60,10 +77,27 @@ function modelReady() {
 }
 
 function draw() {
-  image(video, 0, 0, width, height);
+  background(200);
+  image(video, 0, 0, width/2, height);
 
   // We call function to draw all keypoints
-  drawKeypoints();
+  // drawKeypoints();
+
+    /*if (userImg) {
+      image(userImg, width/2, 0, width/2, height);
+    }*/
+
+  if (predictionsUserImg.length > 0) {
+      // image(userImg, width/2, 0, videoWidth, videoHeight);
+      // userImg.size(videoWidth,videoHeight);
+      image(userImg, width/2, 0);
+      console.log('TEST APR AFFICHAGE')
+      console.log(userImg)
+      drawKeypointsUserImg();
+      // noLoop(); // stop looping when the poses are estimated // marche pas parce que l'autre doit avoir une loop
+      drawKeypoints();
+  }
+  
 }
 
 
@@ -76,17 +110,10 @@ function drawKeypoints() {
     // Draw facial keypoints.
     for (let j = 0; j < keypoints.length; j += 1) {
       const [x, y] = keypoints[j];
-      if(j==4){
-        const [x, y] = keypoints[j];
-        nose = facemesh.getUVCoords();
-        image(img, nose, height / 2, img.width / 2, img.height / 2);
-        fill(0,255, 0);
-        ellipse(x, y, 10, 10);
-    
-      }
 
-      fill(0, 255, 0);
-      ellipse(x, y, 5, 5);
+      fill(0, 0, 0);
+      ellipse(x, y, 2, 2);
+      color = color +2;
     }
 
     // const [v, w] = keypoints[13];
@@ -96,11 +123,18 @@ function drawKeypoints() {
     let widthMouth = keypoints[287][0]-keypoints[57][0];
     let heightMouth = keypoints[18][1]-keypoints[164][1];
 
+    let widthLeftEye = keypoints[244][0]-keypoints[35][0];
+    let heighLeftEye = keypoints[230][1]-keypoints[223][1];
+
+
+    let widthRightEye = keypoints[265][0]-keypoints[464][0];
+    let heighRightEye = keypoints[450][1]-keypoints[443][1];
+
 
     if ( video.loadedmetadata ) { // I've added this check. Only shoot pics if the camera is ready.
 
       let img = video.get( keypoints[57][0], keypoints[164][1], widthMouth, heightMouth );
-
+  
       let mouthMask;
       mouthMask = createGraphics(widthMouth, heightMouth);
 
@@ -137,22 +171,119 @@ function drawKeypoints() {
 
       //image(mouthMask, 0, 0, widthMouth,heightMouth);
 
-
-      pics.push(img);
+      picsMouth.push(img);
 
       let ratiosize = widthMouth/widthMouthUserImg;
       let widthMouthDeepfake = widthMouth/ratiosize;
       let heightMouthDeepfake=heightMouth/ratiosize;
 
-      image(pics[idx], width/2+xMouthUserImg+widthMouthUserImg/2-widthMouthDeepfake/2, yMouthUserImg+heightMouthUserImg/2-heightMouthDeepfake/2, widthMouthDeepfake, heightMouthDeepfake);
+      image(picsMouth[idx], width/2+xMouthUserImg+widthMouthUserImg/2-widthMouthDeepfake/2, yMouthUserImg+heightMouthUserImg/2-heightMouthDeepfake/2, widthMouthDeepfake, heightMouthDeepfake);
       idx++;
+
+
+
+
+      let leftEye = video.get(keypoints[35][0], keypoints[223][1] , widthLeftEye, heighLeftEye);
+      //console.log(leftEye)
+
+      let leftEyeMask;
+      leftEyeMask = createGraphics(widthLeftEye, heighLeftEye);
+
+      let xLeftEyeDepart = keypoints[35][0];
+      let yLeftEyeDepart = keypoints[223][1];
+
+      leftEyeMask.noStroke();
+      leftEyeMask.fill('rgba(0, 0, 0, 1)');
+      leftEyeMask.beginShape();
+      leftEyeMask.vertex(keypoints[35][0]-xLeftEyeDepart, keypoints[35][1]-yLeftEyeDepart);
+      leftEyeMask.vertex(keypoints[31][0]-xLeftEyeDepart, keypoints[31][1]-yLeftEyeDepart);
+      leftEyeMask.vertex(keypoints[228][0]-xLeftEyeDepart, keypoints[228][1]-yLeftEyeDepart);
+      leftEyeMask.vertex(keypoints[229][0]-xLeftEyeDepart, keypoints[229][1]-yLeftEyeDepart);
+      leftEyeMask.vertex(keypoints[230][0]-xLeftEyeDepart, keypoints[230][1]-yLeftEyeDepart);
+      leftEyeMask.vertex(keypoints[231][0]-xLeftEyeDepart, keypoints[231][1]-yLeftEyeDepart);
+      leftEyeMask.vertex(keypoints[232][0]-xLeftEyeDepart, keypoints[232][1]-yLeftEyeDepart);
+      leftEyeMask.vertex(keypoints[233][0]-xLeftEyeDepart, keypoints[233][1]-yLeftEyeDepart);
+      leftEyeMask.vertex(keypoints[244][0]-xLeftEyeDepart, keypoints[244][1]-yLeftEyeDepart);
+      leftEyeMask.vertex(keypoints[189][0]-xLeftEyeDepart, keypoints[189][1]-yLeftEyeDepart);
+      leftEyeMask.vertex(keypoints[221][0]-xLeftEyeDepart, keypoints[221][1]-yLeftEyeDepart);
+      leftEyeMask.vertex(keypoints[222][0]-xLeftEyeDepart, keypoints[222][1]-yLeftEyeDepart);
+      leftEyeMask.vertex(keypoints[223][0]-xLeftEyeDepart, keypoints[223][1]-yLeftEyeDepart);
+      leftEyeMask.vertex(keypoints[224][0]-xLeftEyeDepart, keypoints[224][1]-yLeftEyeDepart);
+      leftEyeMask.vertex(keypoints[225][0]-xLeftEyeDepart, keypoints[225][1]-yLeftEyeDepart);
+      leftEyeMask.vertex(keypoints[113][0]-xLeftEyeDepart, keypoints[113][1]-yLeftEyeDepart);
+      leftEyeMask.endShape(CLOSE);
+      // mouthMask.filter(BLUR, 5);
+
+      leftEye.mask(leftEyeMask);
+
+      //image(mouthMask, 0, 0, widthMouth,heightMouth);
+
+
+      picsLeftEye.push(leftEye);
+
+      let LeftEyeratiosize = widthLeftEye/widthLeftEyeUserImg;
+      let widthLeftEyeDeepfake = widthLeftEye/LeftEyeratiosize;
+      let heightLeftEyeDeepfake=heighLeftEye/LeftEyeratiosize;
+
+      image(picsLeftEye[idxLeftEye], width/2+xLeftEyeUserImg+widthLeftEyeUserImg/2-widthLeftEyeDeepfake/2, yLeftEyeUserImg+heightLeftEyeUserImg/2-heightLeftEyeDeepfake/2, widthLeftEyeDeepfake, heightLeftEyeDeepfake);
+      idxLeftEye++;
+
+
+
+
+
+      
+      let RightEye = video.get(keypoints[464][0], keypoints[443][1] , widthRightEye, heighRightEye);
+      console.log(RightEye)
+
+      let RightEyeMask;
+      RightEyeMask = createGraphics(widthRightEye, heighRightEye);
+
+      let xRightEyeDepart = keypoints[464][0];
+      let yRightEyeDepart = keypoints[443][1];
+
+      RightEyeMask.noStroke();
+      RightEyeMask.fill('rgba(0, 0, 0, 1)');
+      RightEyeMask.beginShape();
+      RightEyeMask.vertex(keypoints[265][0]-xRightEyeDepart, keypoints[265][1]-yRightEyeDepart);
+      RightEyeMask.vertex(keypoints[261][0]-xRightEyeDepart, keypoints[261][1]-yRightEyeDepart);
+      RightEyeMask.vertex(keypoints[448][0]-xRightEyeDepart, keypoints[448][1]-yRightEyeDepart);
+      RightEyeMask.vertex(keypoints[449][0]-xRightEyeDepart, keypoints[449][1]-yRightEyeDepart);
+      RightEyeMask.vertex(keypoints[450][0]-xRightEyeDepart, keypoints[450][1]-yRightEyeDepart);
+      RightEyeMask.vertex(keypoints[451][0]-xRightEyeDepart, keypoints[451][1]-yRightEyeDepart);
+      RightEyeMask.vertex(keypoints[452][0]-xRightEyeDepart, keypoints[452][1]-yRightEyeDepart);
+      RightEyeMask.vertex(keypoints[453][0]-xRightEyeDepart, keypoints[453][1]-yRightEyeDepart);
+      RightEyeMask.vertex(keypoints[464][0]-xRightEyeDepart, keypoints[464][1]-yRightEyeDepart);
+      RightEyeMask.vertex(keypoints[413][0]-xRightEyeDepart, keypoints[413][1]-yRightEyeDepart);
+      RightEyeMask.vertex(keypoints[441][0]-xRightEyeDepart, keypoints[441][1]-yRightEyeDepart);
+      RightEyeMask.vertex(keypoints[442][0]-xRightEyeDepart, keypoints[442][1]-yRightEyeDepart);
+      RightEyeMask.vertex(keypoints[443][0]-xRightEyeDepart, keypoints[443][1]-yRightEyeDepart);
+      RightEyeMask.vertex(keypoints[444][0]-xRightEyeDepart, keypoints[444][1]-yRightEyeDepart);
+      RightEyeMask.vertex(keypoints[445][0]-xRightEyeDepart, keypoints[445][1]-yRightEyeDepart);
+      RightEyeMask.vertex(keypoints[342][0]-xRightEyeDepart, keypoints[342][1]-yRightEyeDepart);
+      RightEyeMask.endShape(CLOSE);
+      // mouthMask.filter(BLUR, 5);
+
+      RightEye.mask(RightEyeMask);
+
+      //image(mouthMask, 0, 0, widthMouth,heightMouth);
+
+
+      picsRightEye.push(RightEye);
+
+      let RightEyeratiosize = widthRightEye/widthRightEyeUserImg;
+      let widthRightEyeDeepfake = widthRightEye/RightEyeratiosize;
+      let heightRightEyeDeepfake=heighRightEye/RightEyeratiosize;
+
+      image(picsRightEye[idxRightEye], width/2+xRightEyeUserImg+widthRightEyeUserImg/2-widthRightEyeDeepfake/2, yRightEyeUserImg+heightRightEyeUserImg/2-heightRightEyeDeepfake/2, widthRightEyeDeepfake, heightRightEyeDeepfake);
+      idxRightEye++;
+
 
       // console.log(widthMouth);
       
     }
 
   }
-  console.log("Hi ready!");
 }
 
 function handleFile(file) {
@@ -193,13 +324,28 @@ function drawKeypointsUserImg() {
 
       noStroke();
       fill(255, 0, 0);
-      ellipse(x+width/2, y, 2, 2);
+
 
       xMouthUserImg = keypoints[57][0];
       yMouthUserImg = keypoints[164][1];
 
       widthMouthUserImg = keypoints[287][0]-keypoints[57][0];
       heightMouthUserImg = keypoints[18][1]-keypoints[164][1];
+
+
+      xLeftEyeUserImg = keypoints[35][0];
+      yLeftEyeUserImg = keypoints[223][1];
+
+      widthLeftEyeUserImg = keypoints[244][0]-keypoints[35][0];
+      heightLeftEyeUserImg = keypoints[230][1]-keypoints[223][1];
+
+
+      xRightEyeUserImg = keypoints[464][0];
+      yRightEyeUserImg = keypoints[443][1];
+
+      widthRightEyeUserImg = keypoints[265][0]-keypoints[464][0];
+      heightRightEyeUserImg = keypoints[450][1]-keypoints[443][1];
+
     }
   }
 }
