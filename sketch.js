@@ -60,27 +60,10 @@ function modelReady() {
 }
 
 function draw() {
-  background(200);
-  image(video, 0, 0, width/2, height);
+  image(video, 0, 0, width, height);
 
   // We call function to draw all keypoints
-  // drawKeypoints();
-
-    /*if (userImg) {
-      image(userImg, width/2, 0, width/2, height);
-    }*/
-
-  if (predictionsUserImg.length > 0) {
-      // image(userImg, width/2, 0, videoWidth, videoHeight);
-      // userImg.size(videoWidth,videoHeight);
-      image(userImg, width/2, 0);
-      console.log('TEST APR AFFICHAGE')
-      console.log(userImg)
-      drawKeypointsUserImg();
-      // noLoop(); // stop looping when the poses are estimated // marche pas parce que l'autre doit avoir une loop
-      drawKeypoints();
-  }
-  
+  drawKeypoints();
 }
 
 
@@ -93,10 +76,17 @@ function drawKeypoints() {
     // Draw facial keypoints.
     for (let j = 0; j < keypoints.length; j += 1) {
       const [x, y] = keypoints[j];
+      if(j==4){
+        const [x, y] = keypoints[j];
+        nose = facemesh.getUVCoords();
+        image(img, nose, height / 2, img.width / 2, img.height / 2);
+        fill(0,255, 0);
+        ellipse(x, y, 10, 10);
+    
+      }
 
-      fill(0, 0, 0);
-      ellipse(x, y, 2, 2);
-      color = color +2;
+      fill(0, 255, 0);
+      ellipse(x, y, 5, 5);
     }
 
     // const [v, w] = keypoints[13];
@@ -162,6 +152,7 @@ function drawKeypoints() {
     }
 
   }
+  console.log("Hi ready!");
 }
 
 function handleFile(file) {
