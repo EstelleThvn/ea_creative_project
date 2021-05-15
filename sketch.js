@@ -34,7 +34,6 @@ let heightRightEyeUserImg;
 
 let userImgResized;
 
-
 function setup() {
   // createCanvas(640, 480);
   // video = createCapture(VIDEO);
@@ -67,8 +66,16 @@ function setup() {
   // Hide the video element, and just show the canvas
   video.hide();
 
+  let div = createDiv('');
+  div.addClass('lineBreak');
+
   input = createFileInput(handleFile);
-  input.position(width/2, 20);
+  // input.position(width/2, 20);
+
+  let aboutSection = createDiv(`<h2>What's Blended Faces?</h2>
+<p>CONCEPT</p>
+<div><a href="https://github.com/EstelleThvn/ea_creative_project">The link to our github project 🤗</a></div>`);
+aboutSection.addClass('aboutSection');
 
 }
 
@@ -77,7 +84,7 @@ function modelReady() {
 }
 
 function draw() {
-  background(200);
+  background('#edf2f4');
   image(video, 0, 0, width/2, height);
 
   // We call function to draw all keypoints
@@ -93,7 +100,6 @@ function draw() {
       // noLoop(); // stop looping when the poses are estimated // marche pas parce que l'autre doit avoir une loop
       drawKeypoints();
   }
-  
 }
 
 
