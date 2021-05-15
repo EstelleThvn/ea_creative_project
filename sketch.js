@@ -35,9 +35,6 @@ let heightRightEyeUserImg;
 let userImgResized;
 
 function setup() {
-  // createCanvas(640, 480);
-  // video = createCapture(VIDEO);
-
   createCanvas( videoWidth*2, videoHeight );
 
   let constraints = {
@@ -51,8 +48,6 @@ function setup() {
   };
   
   video = createCapture( constraints );
-
-  // video.size(width, height);
 
 
   facemesh = ml5.facemesh(video, modelReady);
@@ -73,7 +68,7 @@ function setup() {
   // input.position(width/2, 20);
 
   let aboutSection = createDiv(`<h2>What's Blended Faces?</h2>
-<p>CONCEPT</p>
+<p>BlendedFaces is the trendy filter. Select an image of your friends or a celebrity, one of your choice, and let the site put your mouth and eyes over the selected image. Make them do weird faces or sing the worst song or make them say anything you want.</p>
 <div><a href="https://github.com/EstelleThvn/ea_creative_project">The link to our github project 🤗</a></div>`);
 aboutSection.addClass('aboutSection');
 
