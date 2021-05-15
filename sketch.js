@@ -65,11 +65,11 @@ function setup() {
   div.addClass('lineBreak');
 
   input = createFileInput(handleFile);
-  // input.position(width/2, 20);
 
+  //create the about section
   let aboutSection = createDiv(`<h2>What's Blended Faces?</h2>
-<p>BlendedFaces is the trendy filter. Select an image of your friends or a celebrity, one of your choice, and let the site put your mouth and eyes over the selected image. Make them do weird faces or sing the worst song or make them say anything you want.</p>
-<div><a href="https://github.com/EstelleThvn/ea_creative_project">The link to our github project 🤗</a></div>`);
+<p>BlendedFaces is THE trendy filter. Select an image of your friends or a celebrity, one of your choice, and let the site put your mouth and eyes over the selected image. Make them do weird faces or sing the worst song or make them say anything you want. </p>
+<div><a href="https://github.com/EstelleThvn/ea_creative_project">Our github project 🤗</a></div>`);
 aboutSection.addClass('aboutSection');
 
 }
@@ -82,23 +82,19 @@ function draw() {
   background('#edf2f4');
   image(video, 0, 0, width/2, height);
 
-  // We call function to draw all keypoints
-  // drawKeypoints();
-
   if (predictionsUserImg.length > 0) {
       image(userImgResized, width/2, 0,videoWidth,videoHeight);
 
-      // image(userImg, width/2, 0);
-
-
+      //draws the keypoints on the image imported by the user
       drawKeypointsUserImg();
-      // noLoop(); // stop looping when the poses are estimated // marche pas parce que l'autre doit avoir une loop
+
+      //draws the keypoints on the video
       drawKeypoints();
   }
 }
 
 
-// A function to draw ellipses over the detected keypoints of the video
+// A function to copy the eyes and mouth from the video
 function drawKeypoints() {
   for (let i = 0; i < predictions.length; i += 1) {
     const keypoints = predictions[i].scaledMesh;
@@ -126,9 +122,7 @@ function drawKeypoints() {
     let heighRightEye = keypoints[450][1]-keypoints[443][1];
 
 
-    if ( video.loadedmetadata ) { // I've added this check. Only shoot pics if the camera is ready.
-
-
+    if ( video.loadedmetadata ) {
 
       let img = video.get(keypoints[57][0]-10, keypoints[164][1]-10, widthMouth+20, heightMouth+20);
 
@@ -138,6 +132,7 @@ function drawKeypoints() {
       let xDepart = keypoints[57][0]-10;
       let yDepart = keypoints[164][1]-10;
 
+      //creates the shape of the mask for the mouth
       mouthMask.noStroke();
       mouthMask.fill('rgba(0, 0, 0, 1)');
       mouthMask.beginShape();
@@ -166,8 +161,6 @@ function drawKeypoints() {
 
       img.mask(mouthMask);
 
-      //image(mouthMask, 0, 0, widthMouth,heightMouth);
-
       picsMouth.push(img);
 
       let ratiosize = widthMouth/widthMouthUserImg;
@@ -181,7 +174,6 @@ function drawKeypoints() {
 
 
       let leftEye = video.get(keypoints[35][0]-10, keypoints[223][1]-10, widthLeftEye+20, heighLeftEye+20);
-      //console.log(leftEye)
 
       let leftEyeMask;
       leftEyeMask = createGraphics(widthLeftEye+20, heighLeftEye+20);
@@ -213,8 +205,6 @@ function drawKeypoints() {
 
       leftEye.mask(leftEyeMask);
 
-      //image(mouthMask, 0, 0, widthMouth,heightMouth);
-
 
       picsLeftEye.push(leftEye);
 
@@ -224,7 +214,6 @@ function drawKeypoints() {
 
       image(picsLeftEye[idxLeftEye], width/2+xLeftEyeUserImg+widthLeftEyeUserImg/2-widthLeftEyeDeepfake/2*1.5, yLeftEyeUserImg+heightLeftEyeUserImg/2-heightLeftEyeDeepfake/2*1.5, widthLeftEyeDeepfake*1.5, heightLeftEyeDeepfake*1.5);
       idxLeftEye++;
-
 
 
 
@@ -263,7 +252,6 @@ function drawKeypoints() {
 
       RightEye.mask(RightEyeMask);
 
-      //image(mouthMask, 0, 0, widthMouth,heightMouth);
 
 
       picsRightEye.push(RightEye);
@@ -280,6 +268,7 @@ function drawKeypoints() {
   }
 }
 
+//a function to handle the file imported by the user
 function handleFile(file) {
   print(file);
   if (file.type === 'image') {
@@ -297,7 +286,7 @@ function handleFile(file) {
   }
 }
 
-// when the image is ready, then load up poseNet
+// when the imported image is ready, we load up facemesh
 function imageReady() {
   
   facemeshUserImg = ml5.facemesh(modelReadyUserImg);
@@ -312,16 +301,15 @@ function modelReadyUserImg() {
   facemeshUserImg.predict(userImg);
 }
 
+//a function to get the coordinates of each keypoints of the imported image
 function drawKeypointsUserImg() {
   for (let i = 0; i < predictionsUserImg.length; i += 1) {
     const keypoints = predictionsUserImg[i].scaledMesh;
 
-    // Draw facial keypoints.
     for (let j = 0; j < keypoints.length; j += 1) {
       const [x, y] = keypoints[j];
 
       noStroke();
-      fill(255, 0, 0);
       // ellipse(x+width/2, y, 2, 2);
 
       xMouthUserImg = keypoints[57][0];
