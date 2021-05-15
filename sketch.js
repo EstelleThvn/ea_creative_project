@@ -68,7 +68,7 @@ function setup() {
 
   //create the about section
   let aboutSection = createDiv(`<h2>What's Blended Faces?</h2>
-<p>BlendedFaces is THE trendy filter. Select an image of your friends or a celebrity, one of your choice, and let the site put your mouth and eyes over the selected image. Make them do weird faces or sing the worst song or make them say anything you want. </p>
+<p>BlendedFaces is THE trendy filter. Select an image of one of your friends or a celebrity, one of your choice, and let the site put your mouth and eyes over the selected image. Make them do weird faces, sing the worst songs or make them say anything you want.</p>
 <div><a href="https://github.com/EstelleThvn/ea_creative_project">Our github project 🤗</a></div>`);
 aboutSection.addClass('aboutSection');
 
